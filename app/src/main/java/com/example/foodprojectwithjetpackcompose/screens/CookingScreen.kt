@@ -45,14 +45,13 @@ fun Content() {
 
 }
 
+
 @Composable
 fun ParallaxToolbar(scrollState: LazyListState) {
 
     val imageHeight = AppBarExpendedHeight - AppBarCollapseHeight
-
     val maxOffset =
         with(LocalDensity.current) { imageHeight.roundToPx() } - LocalWindowInsets.current.systemBars.layoutInsets.top
-
     val offset = min(scrollState.firstVisibleItemScrollOffset, maxOffset)
 
     val offsetProgress = max(0f, offset * 3f - 2f * maxOffset) / maxOffset
@@ -63,15 +62,12 @@ fun ParallaxToolbar(scrollState: LazyListState) {
         contentPadding = PaddingValues(),
         backgroundColor = Color.White,
         modifier = Modifier
-            .height(
-                AppBarExpendedHeight
-            )
+            .height(AppBarExpendedHeight)
             .offset { IntOffset(x = 0, y = -offset) },
         elevation = if (offset == maxOffset) 4.dp else 0.dp
     ) {
         /**bottom box is for image's box: */
         Column {
-
             Box(
                 modifier = Modifier
                     .height(imageHeight)
@@ -85,8 +81,8 @@ fun ParallaxToolbar(scrollState: LazyListState) {
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )
-                /**Implementation the dim color under the Image: */
 
+                /**Implementation the dim color under the Image: */
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
