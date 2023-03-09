@@ -9,7 +9,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,8 +55,69 @@ fun Content(scrollState: LazyListState) {
     ) {
         item {
             BasicInfo()
+            Description()
+            ServingCalculator()
+            ShoppingListButton()
         }
     }
+}
+
+@Composable
+fun ShoppingListButton() {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Button(
+            onClick = {},
+            elevation = null,
+            shape = Shapes.small,
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Pink,
+                contentColor = Color.White
+            ),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Add to shopping list", modifier = Modifier.padding(8.dp))
+        }
+    }
+}
+
+
+@Composable
+fun ServingCalculator() {
+    var value by remember {
+        mutableStateOf(5)
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .background(LightGray)
+            .clip(Shapes.small)
+            .padding(horizontal = 16.dp)
+    ) {
+        Text(
+            text = "Serving",
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.weight(1f)
+        )
+        CircularButton(iconRes = R.drawable.ic_minus, elevation = null, color = Pink) {
+            value--
+        }
+        Text(text = "$value", modifier = Modifier.padding(16.dp), fontWeight = FontWeight.Medium)
+        CircularButton(iconRes = R.drawable.ic_plus, elevation = null, color = Pink) {
+            value++
+        }
+    }
+}
+
+
+@Composable
+fun Description() {
+    Text(
+        text = "This Dessert is very tasty and not very hard to prepare. and please pay attention that you can replace strawberry with any another fruit you like",
+        fontWeight = FontWeight.Medium,
+        modifier = Modifier.padding(16.dp)
+    )
 }
 
 @Composable
