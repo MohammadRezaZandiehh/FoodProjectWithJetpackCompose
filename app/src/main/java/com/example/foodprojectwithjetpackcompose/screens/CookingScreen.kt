@@ -3,10 +3,12 @@ package com.example.foodprojectwithjetpackcompose.screens
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -17,6 +19,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -28,6 +31,7 @@ import com.google.accompanist.insets.LocalWindowInsets
 import kotlin.math.max
 import kotlin.math.min
 import com.example.foodprojectwithjetpackcompose.R
+import com.example.foodprojectwithjetpackcompose.ui.theme.DarkGray
 import com.example.foodprojectwithjetpackcompose.ui.theme.LightGray
 import com.example.foodprojectwithjetpackcompose.ui.theme.Pink
 import com.example.foodprojectwithjetpackcompose.ui.theme.Shapes
@@ -58,7 +62,159 @@ fun Content(scrollState: LazyListState) {
             Description()
             ServingCalculator()
             ShoppingListButton()
+            SimilarFoodsHeader()
+            SimilarFoods()
         }
+    }
+}
+
+
+@Composable
+fun SimilarFoods() {
+    Row(
+        modifier = Modifier
+            .horizontalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        FastFoodItem(
+            img = painterResource(id = R.drawable.hot_dog),
+            name = "Hot Dog",
+            desc = "Fast Foods",
+            price = "45$"
+        )
+
+        FastFoodItem(
+            img = painterResource(id = R.drawable.doughnut),
+            name = "Doughnut",
+            desc = "Dessert",
+            price = "32$"
+        )
+
+        FastFoodItem(
+            img = painterResource(id = R.drawable.hamburger),
+            name = "Hamburger",
+            desc = "Fast Foods",
+            price = "56$"
+        )
+
+        FastFoodItem(
+            img = painterResource(id = R.drawable.apple_pie),
+            name = "Apple Pie",
+            desc = "Cookies",
+            price = "26$"
+        )
+    }
+}
+
+
+@Composable
+fun FastFoodItem(
+    img: Painter,
+    name: String,
+    desc: String,
+    price: String
+) {
+    Box(
+        modifier = Modifier
+            .width(170.dp)
+            .height(250.dp)
+            .padding(8.dp),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.7f)
+                .clip(RoundedCornerShape(16.dp))
+                .background(LightGray)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 75.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    text = name
+                )
+
+                Text(
+                    color = Color.Gray,
+                    modifier = Modifier.padding(top = 5.dp),
+                    text = desc
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 14.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = price,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 16.sp,
+                        color = Pink
+                    )
+
+                    Button(
+                        onClick = { },
+                        contentPadding = PaddingValues(),
+                        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                        modifier = Modifier
+                            .padding(top = 5.dp)
+                            .fillMaxHeight()
+                            .width(38.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Pink,
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Icon(painterResource(id = R.drawable.ic_plus), contentDescription = "")
+                    }
+                }
+            }
+        }
+
+        Box(modifier = Modifier.fillMaxSize()) {
+            Image(
+                painter = img,
+                contentDescription = "",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.6f)
+            )
+        }
+    }
+}
+
+@Composable
+fun SimilarFoodsHeader() {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .fillMaxWidth()
+    ) {
+        Column {
+            Text(text = "Similar Foods", fontWeight = FontWeight.Bold)
+            Text(text = "You may like these...", color = DarkGray)
+        }
+
+        Button(
+            onClick = {},
+            elevation = null,
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color.Transparent, contentColor = Pink
+            )
+        ) {
+            Text(text = "Show more")
+            Icon(painterResource(id = R.drawable.ic_arrow_right), contentDescription = "")
+        }
+
     }
 }
 
@@ -271,6 +427,8 @@ fun CircularButton(
         Icon(painterResource(id = iconRes), null)
     }
 }
+
+
 /**
  * 1- Brush.verticalGradient(
 colorStops = arrayOf(
@@ -279,4 +437,6 @@ Pair(1f, Color.White)
 ))
 
 2- onClick: () -> Unit = {}   === > we write like this until we can pass our onClick out side of that.
-3- .statusBarsPadding()    ===> it has a default padding in the amount of statsBar */
+3- .statusBarsPadding()    ===> it has a default padding in the amount of statsBar
+4- contentAlignment = Alignment.BottomCenter   ===> we want to add another box to this box but start with end off parent box
+5- */
