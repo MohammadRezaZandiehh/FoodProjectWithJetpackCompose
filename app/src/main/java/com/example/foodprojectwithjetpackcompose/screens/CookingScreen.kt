@@ -9,8 +9,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +27,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,8 +49,8 @@ val AppBarExpendedHeight = 400.dp
 fun CookingScreen() {
     val scrollState = rememberLazyListState()
     Box {
-        ParallaxToolbar(scrollState = scrollState)
         Content(scrollState = scrollState)
+        ParallaxToolbar(scrollState = scrollState)
     }
 }
 
@@ -62,12 +66,144 @@ fun Content(scrollState: LazyListState) {
             Description()
             ServingCalculator()
             ShoppingListButton()
-            SimilarFoodsHeader()
+            SimilarFoodsHeader(headerTitle = "Similar Foods", bodyTitle = "You may like these...")
             SimilarFoods()
+            SimilarFoodsHeader(
+                headerTitle = "Similar Recipes",
+                bodyTitle = "You can also read these..."
+            )
+            SimilarRecipes()
         }
     }
 }
 
+@Composable
+fun SimilarRecipes() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+    ) {
+        RecipeItem(
+            name = "Cheesecake",
+            category = "Dessert",
+            exp = "Beginner",
+            baseColor = Color(0xFFcbe8e0),
+            expColor = Color(0xFF8cd694),
+            img = painterResource(id = R.drawable.cheesecake)
+        )
+
+        RecipeItem(
+            name = "Cupcake",
+            category = "Dessert",
+            exp = "2+ Year's Experience",
+            baseColor = Color(0xFFe8d0ff),
+            expColor = Color(0xFF7c89ff),
+            img = painterResource(id = R.drawable.cupcake)
+        )
+
+        RecipeItem(
+            name = "Berry Cake",
+            category = "Breakfast",
+            exp = "Beginner",
+            baseColor = Color(0xFFfae9d4),
+            expColor = Color(0xFF8cd694),
+            img = painterResource(id = R.drawable.cheesecake)
+        )
+    }
+}
+
+@Composable
+fun RecipeItem(
+    name: String,
+    category: String,
+    exp: String,
+    img: Painter,
+    baseColor: Color,
+    expColor: Color
+) {
+    Row(
+        modifier = Modifier
+            .padding(bottom = 16.dp)
+            .fillMaxWidth()
+            .height(120.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(0.3f)
+                .fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier
+                    .width(120.dp)
+                    .height(120.dp)
+                    .clip(CircleShape)
+                    .background(baseColor),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = img,
+                    contentDescription = "",
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .weight(0.6f)
+                .fillMaxHeight()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = name ,
+                modifier = Modifier.weight(0.33f),
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp ,
+                textAlign = TextAlign.Center
+            )
+
+            Text(
+                text = category ,
+                modifier = Modifier.weight(0.33f),
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp ,
+                color = Color.Gray,
+                textAlign = TextAlign.Center
+            )
+
+            Row(
+                modifier = Modifier.weight(0.33f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier
+                        .width(20.dp)
+                        .height(20.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(expColor)
+                ) {}
+
+                Text(
+                    text = exp,
+                    modifier = Modifier.padding(start=8.dp),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .weight(0.1f)
+                .fillMaxHeight()
+                .padding(top = 16.dp)
+        ) {
+            Icon(imageVector = Icons.Filled.KeyboardArrowRight, contentDescription ="" )
+        }
+    }
+}
 
 @Composable
 fun SimilarFoods() {
@@ -192,7 +328,7 @@ fun FastFoodItem(
 }
 
 @Composable
-fun SimilarFoodsHeader() {
+fun SimilarFoodsHeader(headerTitle: String, bodyTitle: String) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -200,8 +336,8 @@ fun SimilarFoodsHeader() {
             .fillMaxWidth()
     ) {
         Column {
-            Text(text = "Similar Foods", fontWeight = FontWeight.Bold)
-            Text(text = "You may like these...", color = DarkGray)
+            Text(text = headerTitle, fontWeight = FontWeight.Bold)
+            Text(text = bodyTitle, color = DarkGray)
         }
 
         Button(
@@ -259,7 +395,11 @@ fun ServingCalculator() {
         CircularButton(iconRes = R.drawable.ic_minus, elevation = null, color = Pink) {
             value--
         }
-        Text(text = "$value", modifier = Modifier.padding(16.dp), fontWeight = FontWeight.Medium)
+        Text(
+            text = "$value",
+            modifier = Modifier.padding(16.dp),
+            fontWeight = FontWeight.Medium
+        )
         CircularButton(iconRes = R.drawable.ic_plus, elevation = null, color = Pink) {
             value++
         }
@@ -417,7 +557,10 @@ fun CircularButton(
         onClick = onClick,
         contentPadding = PaddingValues(),
         shape = Shapes.small,
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White, contentColor = color),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Color.White,
+            contentColor = color
+        ),
         elevation = elevation,
         modifier = Modifier
             .width(38.dp)
